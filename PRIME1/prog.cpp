@@ -1,9 +1,7 @@
 
+#include <climits>
 #include <iostream>
 #include <vector>
-
-// For debugging.
-#define DEBUG if (false) printf
 
 // Integer fast exponentiation
 unsigned long long pow(
@@ -22,27 +20,6 @@ unsigned long long pow(
     unsigned long long tmp = pow(base, exp / 2, mod);
     return (tmp * tmp) % mod;
   }
-}
-
-std::vector<bool> sieve (1000000001, true);
-
-void setupSieve() {
-  sieve[0] = false;
-  sieve[1] = false;
-  for (long long i = 4; i < sieve.size(); i += 2) {
-    sieve[i] = false;
-  }
-  for (long long i = 3; i < sieve.size(); i += 2) {
-    if (sieve[i]) {
-      for (long long j = i * 2; j < sieve.size(); j += i) {
-        sieve[j] = false;
-      }
-    }
-  }
-}
-
-bool isPrime_Sieve(unsigned long long n) {
-  return sieve[n];
 }
 
 bool isPrime_MillerTest(unsigned long long n) {
@@ -79,26 +56,17 @@ bool isPrime_MillerTest(unsigned long long n) {
       continue;
     }
 
-    DEBUG("testing\nn: %llu\nn - 1: %llu\na: %llu\ns: %llu\nd: %llu\n", n, n - 1, a, s, d);
-
-    unsigned long long ad = pow(a, d, n);
-    DEBUG("a^d: %llu\na^d (mod n): %llu\n", ad, ad % n);
-
     bool composite = true;
 
     // This witness cannot claim n is composite
     if (pow(a, d, n) % n == 1) {
-      DEBUG("%llu thinks %llu may be prime, a^d\n", a, n);
       composite = false;
     }
 
     for (unsigned long long r = 0; r < s; r++) {
-      DEBUG("r: %llu\n2^r*d: %llu\n", r, pow(2, r) * d);
       unsigned long long a2rd = pow(a, pow(2, r) * d, n);
-      DEBUG("a^(2^r*d): %llu\na^(2^r*d) (mod n): %llu\n", a2rd, a2rd % n);
       // This witness cannot claim n is composite
       if (a2rd % n == n -1) {
-        DEBUG("%llu thinks %llu may be prime, a^(2^%llu*d)\n", a, n, r);
         composite = false;
         break;
       }
@@ -106,33 +74,21 @@ bool isPrime_MillerTest(unsigned long long n) {
 
     // Witness a has verified n is composite, return false.
     if (composite) {
-      DEBUG("returning false\n");
       return false;
     }
   }
 
   // No witnesses have verified n as composite, so n is prime.
-  DEBUG("%llu is prime\n", n);
   return true;
 }
 
 int main() {
-  // setupSieve();
-  // printf("(37^353074769) mod 706149539 = %llu\n", pow(37, 353074769, 706149539));
   long i, j;
   long t, a, b;
   std::cin >> t;
   for (i = 0; i < t; i++) {
     std::cin >> a >> b;
     for (j = a; j <= b; j++) {
-      // bool isPrime1 = isPrime_MillerTest(j);
-      // bool isPrime2 = isPrime_Sieve(j);
-      // if (isPrime1 != isPrime2) {
-      //   std::cout << "\nFor: " << j << "\n";
-      //   std::cout << "Miller says: " << isPrime1 << "\n";
-      //   std::cout << "Sieve says:  " << isPrime2 << "\n\n";
-      //   break;
-      // }
       if (isPrime_MillerTest(j)) {
         printf("%ld\n", j);
       }
