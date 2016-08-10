@@ -1,7 +1,7 @@
 SRC = prog.cpp
 OBJ = prog.o
 CC = g++
-FLAGS = -O2 -fomit-frame-pointer
+FLAGS = -Wall -O2 -fomit-frame-pointer -std=c++0x
 
 all: build run
 
