@@ -3,7 +3,7 @@
 #include <vector>
 
 // For debugging.
-#define DEBUG if (true) printf
+#define DEBUG if (false) printf
 
 // Integer fast exponentiation
 unsigned long long pow(
@@ -17,11 +17,32 @@ unsigned long long pow(
     return base % mod;
   } else if (exp % 2 == 1) {
     unsigned long long tmp = pow(base, (exp - 1) / 2, mod);
-    return (tmp * tmp * base) % mod;
+    return ((((tmp * tmp) % mod) * base) % mod);
   } else {
     unsigned long long tmp = pow(base, exp / 2, mod);
     return (tmp * tmp) % mod;
   }
+}
+
+std::vector<bool> sieve (1000000001, true);
+
+void setupSieve() {
+  sieve[0] = false;
+  sieve[1] = false;
+  for (long long i = 4; i < sieve.size(); i += 2) {
+    sieve[i] = false;
+  }
+  for (long long i = 3; i < sieve.size(); i += 2) {
+    if (sieve[i]) {
+      for (long long j = i * 2; j < sieve.size(); j += i) {
+        sieve[j] = false;
+      }
+    }
+  }
+}
+
+bool isPrime_Sieve(unsigned long long n) {
+  return sieve[n];
 }
 
 bool isPrime_MillerTest(unsigned long long n) {
@@ -96,12 +117,22 @@ bool isPrime_MillerTest(unsigned long long n) {
 }
 
 int main() {
+  // setupSieve();
+  // printf("(37^353074769) mod 706149539 = %llu\n", pow(37, 353074769, 706149539));
   long i, j;
   long t, a, b;
   std::cin >> t;
   for (i = 0; i < t; i++) {
     std::cin >> a >> b;
     for (j = a; j <= b; j++) {
+      // bool isPrime1 = isPrime_MillerTest(j);
+      // bool isPrime2 = isPrime_Sieve(j);
+      // if (isPrime1 != isPrime2) {
+      //   std::cout << "\nFor: " << j << "\n";
+      //   std::cout << "Miller says: " << isPrime1 << "\n";
+      //   std::cout << "Sieve says:  " << isPrime2 << "\n\n";
+      //   break;
+      // }
       if (isPrime_MillerTest(j)) {
         printf("%ld\n", j);
       }
