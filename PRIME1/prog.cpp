@@ -48,7 +48,6 @@ bool isPrime_MillerTest(unsigned long long n) {
   // This list can verify any n < 18446744073709551616 = (2^64)
   // If that is not performant enough, consider: {2, 7, 61} for n < 4759123141
   unsigned long long witnesses [] = {2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37};
-  // unsigned long long witnesses [] = {5};
 
   for (const unsigned long long a : witnesses) {
     // Witnesses must be less than n.
